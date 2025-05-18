@@ -24,16 +24,7 @@ local buttons = {
   menu_state = {},
 }
 
-function love.load()
-  love.window.setTitle "Save The Ball"
-  love.mouse.setVisible(false)
-
-  buttons.menu_state.play_game = button("Play Game", nil, nil, 150, 40)
-  buttons.menu_state.settings = button("Settings", nil, nil, 150, 40)
-  buttons.menu_state.exit_game = button("Exit", love.event.quit, nil, 150, 40)
-
-  table.insert(enemies, 1, Enemy())
-end
+local function startNewGame() end
 
 function love.mousepressed(x, y, button, istouch, presses)
   if not game.state["running"] then
@@ -45,6 +36,17 @@ function love.mousepressed(x, y, button, istouch, presses)
       end
     end
   end
+end
+
+function love.load()
+  love.window.setTitle "Save The Ball"
+  love.mouse.setVisible(false)
+
+  buttons.menu_state.play_game = button("Play Game", nil, nil, 150, 40)
+  buttons.menu_state.settings = button("Settings", nil, nil, 150, 40)
+  buttons.menu_state.exit_game = button("Exit", love.event.quit, nil, 150, 40)
+
+  table.insert(enemies, 1, Enemy())
 end
 
 function love.update()
