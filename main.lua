@@ -1,6 +1,8 @@
 local love = require "love"
 local Enemy = require "Enemy"
-local button = require "Button"
+local Button = require "Button"
+
+math.randomseed(os.time())
 
 local game = {
   difficulty = 1,
@@ -24,7 +26,11 @@ local buttons = {
   menu_state = {},
 }
 
-local function startNewGame() end
+local function startNewGame()
+  game.state["menu"] = false
+  game.state["running"] = true
+  table.insert(enemies, 1, Enemy())
+end
 
 function love.mousepressed(x, y, button, istouch, presses)
   if not game.state["running"] then
@@ -42,18 +48,18 @@ function love.load()
   love.window.setTitle "Save The Ball"
   love.mouse.setVisible(false)
 
-  buttons.menu_state.play_game = button("Play Game", nil, nil, 150, 40)
-  buttons.menu_state.settings = button("Settings", nil, nil, 150, 40)
-  buttons.menu_state.exit_game = button("Exit", love.event.quit, nil, 150, 40)
-
-  table.insert(enemies, 1, Enemy())
+  buttons.menu_state.play_game = Button("Play Game", startNewGame, nil, 150, 40)
+  buttons.menu_state.settings = Button("Settings", nil, nil, 150, 40)
+  buttons.menu_state.exit_game = Button("Exit", love.event.quit, nil, 150, 40)
 end
 
 function love.update()
   player.x, player.y = love.mouse.getPosition()
 
-  for i = 1, #enemies do
-    enemies[i]:move(player.x, player.y)
+  if game.state["running"] then
+    for i = 1, #enemies do
+      enemies[i]:move(player.x, player.y)
+    end
   end
 end
 
