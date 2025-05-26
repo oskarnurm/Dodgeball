@@ -48,6 +48,7 @@ end
 
 local buttons = {
   menu_state = {},
+  ended_state = {},
 }
 
 local function startNewGame()
@@ -75,6 +76,10 @@ function love.load()
   buttons.menu_state.play_game = Button("Play Game", startNewGame, nil, 150, 40)
   buttons.menu_state.settings = Button("Settings", nil, nil, 150, 40)
   buttons.menu_state.exit_game = Button("Exit", love.event.quit, nil, 150, 40)
+
+  buttons.ended_state.play_again = Button("Replay", startNewGame, nil, 100, 50)
+  buttons.ended_state.menu = Button("Menu", changeGameState, menu, 100, 50)
+  buttons.ended_state.exit_game = Button("Quit", love.event.quit, nil, 100, 50)
 end
 
 function love.update(dt)
@@ -93,7 +98,7 @@ function love.update(dt)
           end
         end
       else
-        changeGameState "menu"
+        changeGameState "ended"
       end
     end
     game.points = game.points + dt
@@ -120,6 +125,20 @@ function love.draw()
     buttons.menu_state.play_game:draw(10, 20, 17, 10)
     buttons.menu_state.settings:draw(10, 70, 17, 10)
     buttons.menu_state.exit_game:draw(10, 120, 17, 10)
+  elseif game.state["ended"] then
+    love.graphics.setFont(fonts.big.font)
+    buttons.ended_state.play_again:draw(love.graphics.getWidth() / 2.25, love.graphics.getHeight() / 1.8, 10, 10)
+    buttons.ended_state.menu:draw(love.graphics.getWidth() / 2.25, love.graphics.getHeight() / 1.53, 17, 10)
+    buttons.ended_state.exit_game:draw(love.graphics.getWidth() / 2.25, love.graphics.getHeight() / 1.33, 22, 10)
+
+    love.graphics.printf(
+      math.floor(game.points),
+      fonts.massive.font,
+      0,
+      love.graphics.getHeight() / 2 - fonts.massive.size,
+      love.graphics.getWidth(),
+      "center"
+    )
   end
 
   if not game.state["running"] then
