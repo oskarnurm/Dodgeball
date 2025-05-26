@@ -24,14 +24,19 @@ local player = {
 
 local enemies = {}
 
+local function changeGameState(state)
+  game.state["menu"] = state == "menu"
+  game.state["paused"] = state == "paused"
+  game.state["running"] = state == "running"
+  game.state["ended"] = state == "ended"
+end
+
 local buttons = {
   menu_state = {},
 }
 
 local function startNewGame()
-  game.state["menu"] = false
-  game.state["running"] = true
-
+  changeGameState "running"
   game.points = 0
   enemies = { Enemy(1) }
 end
@@ -62,7 +67,19 @@ function love.update(dt)
 
   if game.state["running"] then
     for i = 1, #enemies do
-      enemies[i]:move(player.x, player.y)
+      if not enemies[i]:checkTouched(player.x, player.y, player.radius) then
+        enemies[i]:move(player.x, player.y)
+
+        for j = 1, #game.levels do
+          if math.floor(game.points) == game.levels[j] then
+            table.insert(enemies, 1, Enemy(game.difficulty * (j + 1)))
+
+            game.points = game.points + 1
+          end
+        end
+      else
+        changeGameState "menu"
+      end
     end
     game.points = game.points + dt
   end
