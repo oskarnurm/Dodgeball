@@ -64,6 +64,10 @@ function love.mousepressed(x, y, button, istouch, presses)
         for index in pairs(buttons.menu_state) do
           buttons.menu_state[index]:checkPressed(x, y, player.radius)
         end
+      elseif game.state["ended"] then
+        for index in pairs(buttons.ended_state) do
+          buttons.ended_state[index]:checkPressed(x, y, player.radius)
+        end
       end
     end
   end
@@ -78,7 +82,7 @@ function love.load()
   buttons.menu_state.exit_game = Button("Exit", love.event.quit, nil, 150, 40)
 
   buttons.ended_state.play_again = Button("Replay", startNewGame, nil, 100, 50)
-  buttons.ended_state.menu = Button("Menu", changeGameState, menu, 100, 50)
+  buttons.ended_state.menu = Button("Menu", changeGameState, "menu", 100, 50)
   buttons.ended_state.exit_game = Button("Quit", love.event.quit, nil, 100, 50)
 end
 
